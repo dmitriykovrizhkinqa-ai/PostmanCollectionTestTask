@@ -1,4 +1,0 @@
-$kind: collection
-name: 01. /auth (POST) - Создание токена
-description: Тест-кейсы для эндпоинта аутентификации
-order: 1000

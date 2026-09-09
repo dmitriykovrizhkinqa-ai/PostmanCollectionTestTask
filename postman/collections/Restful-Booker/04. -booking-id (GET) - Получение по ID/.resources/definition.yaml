@@ -1,4 +1,0 @@
-$kind: collection
-name: 04. /booking/:id (GET) - Получение по ID
-description: Тест-кейсы для получения конкретного бронирования по ID
-order: 4000

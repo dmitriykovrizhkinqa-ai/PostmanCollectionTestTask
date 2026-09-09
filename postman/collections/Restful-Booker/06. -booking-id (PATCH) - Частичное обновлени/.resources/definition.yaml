@@ -1,4 +1,0 @@
-$kind: collection
-name: 06. /booking/:id (PATCH) - Частичное обновление
-description: Тест-кейсы для частичного обновления бронирования
-order: 6000

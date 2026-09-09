@@ -1,4 +1,0 @@
-$kind: collection
-name: 03. /booking (GET) - Получение списка
-description: Тест-кейсы для получения списка бронирований с фильтрацией
-order: 3000

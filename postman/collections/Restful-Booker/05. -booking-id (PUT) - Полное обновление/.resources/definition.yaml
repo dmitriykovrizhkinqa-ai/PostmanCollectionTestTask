@@ -1,4 +1,0 @@
-$kind: collection
-name: 05. /booking/:id (PUT) - Полное обновление
-description: Тест-кейсы для полного обновления бронирования
-order: 5000
