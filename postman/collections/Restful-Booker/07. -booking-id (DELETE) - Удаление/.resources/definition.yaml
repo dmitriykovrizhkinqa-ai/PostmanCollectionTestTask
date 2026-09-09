@@ -1,0 +1,4 @@
+$kind: collection
+name: 07. /booking/:id (DELETE) - Удаление
+description: Тест-кейсы для удаления бронирования
+order: 7000

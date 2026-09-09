@@ -1,0 +1,39 @@
+$kind: http-request
+name: Очень длинное значение firstname (1000 символов)
+url: "{{baseUrl}}/booking"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+        "firstname": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "lastname": "Brown",
+        "totalprice": {{testTotalprice}},
+        "depositpaid": true,
+        "bookingdates": {
+            "checkin": "{{testCheckin}}",
+            "checkout": "{{testCheckout}}"
+        },
+        "additionalneeds": "{{testAdditionalneeds}}"
+    }
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Статус ответа: 400 Bad Request\", function () {\r
+
+      \    pm.expect(pm.response.code).to.equal(400);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"bookingid не должен быть создан\", function () {\r
+
+      \    const response = pm.response.json();\r
+
+      \    pm.expect(response).to.not.have.property('bookingid');\r
+
+      });"
+    language: text/javascript
+order: 6000

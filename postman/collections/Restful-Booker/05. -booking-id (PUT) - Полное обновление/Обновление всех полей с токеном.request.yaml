@@ -1,0 +1,180 @@
+$kind: http-request
+url: "{{baseUrl}}/booking/{{newBookingId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+  Cookie: token={{token}}
+body:
+  type: json
+  content: |-
+    {
+        "firstname": "{{updatedFirstname}}",
+        "lastname": "{{updatedLastname}}",
+        "totalprice": "{{updatedTotalprice}}",
+        "depositpaid": false,
+        "bookingdates": {
+            "checkin": "2026-02-01",
+            "checkout": "2026-02-10"
+        },
+        "additionalneeds": "Dinner"
+    }
+scripts:
+  - type: afterResponse
+    code: "const response = pm.response.json();\r
+
+      const expectedUpdatedFirstname = pm.environment.get('updatedFirstname') || 'James';\r
+
+      const expectedUpdatedLastname = pm.environment.get('updatedLastname') || 'Brown';\r
+
+      const expectedUpdatedTotalprice = parseInt(pm.environment.get('updatedTotalprice') || '200');\r
+
+      \r
+
+      pm.test(\"Статус ответа: 200 OK\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"firstname обновлен на \" + expectedUpdatedFirstname, function () {\r
+
+      \    pm.expect(response.firstname).to.equal(expectedUpdatedFirstname);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"totalprice обновлен на \" + expectedUpdatedTotalprice, function () {\r
+
+      \    pm.expect(response.totalprice).to.equal(expectedUpdatedTotalprice);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"depositpaid обновлен на false\", function () {\r
+
+      \    pm.expect(response.depositpaid).to.be.false;\r
+
+      });\r
+
+      \r
+
+      pm.test(\"checkin обновлен на 2026-02-01\", function () {\r
+
+      \    pm.expect(response.bookingdates.checkin).to.equal('2026-02-01');\r
+
+      });\r
+
+      \r
+
+      pm.test(\"checkout обновлен на 2026-02-10\", function () {\r
+
+      \    pm.expect(response.bookingdates.checkout).to.equal('2026-02-10');\r
+
+      });\r
+
+      \r
+
+      pm.test(\"additionalneeds обновлен на Dinner\", function () {\r
+
+      \    pm.expect(response.additionalneeds).to.equal('Dinner');\r
+
+      });"
+    language: text/javascript
+  - type: beforeRequest
+    code: "const requestDetails = {\r
+
+      \    url: pm.environment.get(\"baseUrl\") + \"/auth\",\r
+
+      \    method: \"POST\",                             \r
+
+      \    header: {\r
+
+      \        \"Content-Type\": \"application/json\"      \r
+
+      \    },\r
+
+      \    body: {\r
+
+      \        mode: \"raw\",\r
+
+      \        raw: JSON.stringify({                     \r
+
+      \            \"username\": \"admin\",\r
+
+      \            \"password\": \"password123\"\r
+
+      \        })\r
+
+      \    }\r
+
+      };\r
+
+      \r
+
+      const createNewBooking = {\r
+
+      \    url: pm.environment.get(\"baseUrl\") + \"/booking\",\r
+
+      \    method: \"POST\",                             \r
+
+      \    header: {\r
+
+      \        \"Content-Type\": \"application/json\"      \r
+
+      \    },\r
+
+      \    body: {\r
+
+      \        mode: \"raw\",\r
+
+      \        raw: JSON.stringify({                     \r
+
+      \            \"firstname\": \"RandomJohn\",\r
+
+      \            \"lastname\": \"RandomDoe\",\r
+
+      \            \"totalprice\": 123421,\r
+
+      \            \"depositpaid\": true,\r
+
+      \            \"bookingdates\": {\r
+
+      \                \"checkin\": \"2027-01-01\",\r
+
+      \                \"checkout\": \"2028-01-10\"\r
+
+      \    },\r
+
+      \            \"additionalneeds\": \"RandomBreakfast\"\r
+
+      \        })\r
+
+      \    }\r
+
+      };\r
+
+      \r
+
+      pm.sendRequest(requestDetails, function (err, response) {\r
+
+      \    var responseData = response.json();\r
+
+      \    pm.environment.set(\"token\", responseData.token);\r
+
+      });\r
+
+      \r
+
+      pm.sendRequest(createNewBooking, function (err, response) {\r
+
+      \    var responseData = response.json();\r
+
+      \    pm.environment.set(\"newBookingId\", responseData.bookingid);\r
+
+      });\r\n"
+    language: text/javascript
+order: 1000

@@ -1,0 +1,158 @@
+$kind: http-request
+url: "{{baseUrl}}/booking/{{newBookingId}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Cookie: token={{token}}
+body:
+  type: json
+  content: |-
+    {
+        "firstname": "NewName"
+    }
+scripts:
+  - type: beforeRequest
+    code: "const requestDetails = {\r
+
+      \    url: pm.environment.get(\"baseUrl\") + \"/auth\",\r
+
+      \    method: \"POST\",                             \r
+
+      \    header: {\r
+
+      \        \"Content-Type\": \"application/json\"      \r
+
+      \    },\r
+
+      \    body: {\r
+
+      \        mode: \"raw\",\r
+
+      \        raw: JSON.stringify({                     \r
+
+      \            \"username\": \"admin\",\r
+
+      \            \"password\": \"password123\"\r
+
+      \        })\r
+
+      \    }\r
+
+      };\r
+
+      \r
+
+      const createNewBooking = {\r
+
+      \    url: pm.environment.get(\"baseUrl\") + \"/booking\",\r
+
+      \    method: \"POST\",                             \r
+
+      \    header: {\r
+
+      \        \"Content-Type\": \"application/json\"      \r
+
+      \    },\r
+
+      \    body: {\r
+
+      \        mode: \"raw\",\r
+
+      \        raw: JSON.stringify({                     \r
+
+      \            \"firstname\": \"RandomJohn\",\r
+
+      \            \"lastname\": \"RandomDoe\",\r
+
+      \            \"totalprice\": 123421,\r
+
+      \            \"depositpaid\": true,\r
+
+      \            \"bookingdates\": {\r
+
+      \                \"checkin\": \"2027-01-01\",\r
+
+      \                \"checkout\": \"2028-01-10\"\r
+
+      \    },\r
+
+      \            \"additionalneeds\": \"RandomBreakfast\"\r
+
+      \        })\r
+
+      \    }\r
+
+      };\r
+
+      \r
+
+      pm.sendRequest(requestDetails, function (err, response) {\r
+
+      \    var responseData = response.json();\r
+
+      \    pm.environment.set(\"token\", responseData.token);\r
+
+      });\r
+
+      \r
+
+      pm.sendRequest(createNewBooking, function (err, response) {\r
+
+      \    var responseData = response.json();\r
+
+      \    pm.environment.set(\"newBookingId\", responseData.bookingid);\r
+
+      });\r\n"
+    language: text/javascript
+  - type: afterResponse
+    code: "const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Статус ответа: 200 OK\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"firstname обновлен на NewName\", function () {\r
+
+      \    pm.expect(response.firstname).to.equal('NewName');\r
+
+      });\r
+
+      \r
+
+      pm.test(\"В ответе присутствует lastname\", function () {\r
+
+      \    pm.expect(response).to.have.property('lastname');\r
+
+      });\r
+
+      \r
+
+      pm.test(\"В ответе присутствует totalprice\", function () {\r
+
+      \    pm.expect(response).to.have.property('totalprice');\r
+
+      });\r
+
+      \r
+
+      pm.test(\"В ответе присутствует depositpaid\", function () {\r
+
+      \    pm.expect(response).to.have.property('depositpaid');\r
+
+      });\r
+
+      \r
+
+      pm.test(\"В ответе присутствует bookingdates\", function () {\r
+
+      \    pm.expect(response).to.have.property('bookingdates');\r
+
+      });"
+    language: text/javascript
+order: 1000

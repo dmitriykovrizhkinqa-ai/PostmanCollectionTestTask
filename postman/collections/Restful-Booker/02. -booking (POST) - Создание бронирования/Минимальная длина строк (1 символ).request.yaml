@@ -1,0 +1,32 @@
+$kind: http-request
+url: "{{baseUrl}}/booking"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+        "firstname": "A",
+        "lastname": "B",
+        "totalprice": {{testTotalprice}},
+        "depositpaid": true,
+        "bookingdates": {
+            "checkin": "{{testCheckin}}",
+            "checkout": "{{testCheckout}}"
+        },
+        "additionalneeds": "{{testAdditionalneeds}}"
+    }
+scripts:
+  - type: afterResponse
+    code: "const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Статус ответа: 400 Bad Request\", function () {\r
+
+      \    pm.response.to.have.status(400);\r
+
+      });"
+    language: text/javascript
+order: 5000

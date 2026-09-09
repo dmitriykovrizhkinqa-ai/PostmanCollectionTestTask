@@ -1,0 +1,5 @@
+$kind: collection
+description: Полная коллекция тест-кейсов для API Restful-Booker на основе тестовой документации
+variables:
+  bookingId: ""
+  token: ""

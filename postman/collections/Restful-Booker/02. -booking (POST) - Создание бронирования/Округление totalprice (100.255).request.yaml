@@ -1,0 +1,52 @@
+$kind: http-request
+url: "{{baseUrl}}/booking"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+        "firstname": "{{testFirstname}}",
+        "lastname": "{{testLastname}}",
+        "totalprice": 100.255,
+        "depositpaid": true,
+        "bookingdates": {
+            "checkin": "{{testCheckin}}",
+            "checkout": "{{testCheckout}}"
+        },
+        "additionalneeds": "{{testAdditionalneeds}}"
+    }
+scripts:
+  - type: afterResponse
+    code: "const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Статус ответа: 200 OK\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"totalprice является числом\", function () {\r
+
+      \    pm.expect(response.booking.totalprice).to.be.a('number');\r
+
+      });\r
+
+      \r
+
+      pm.test(\"totalprice округлен до 100.26 (математическое)\", function () {\r
+
+      \    const price = response.booking.totalprice;\r
+
+      \    const isValid = price === 100.26;\r
+
+      \    pm.expect(isValid).to.be.true;\r
+
+      });"
+    language: text/javascript
+order: 11000

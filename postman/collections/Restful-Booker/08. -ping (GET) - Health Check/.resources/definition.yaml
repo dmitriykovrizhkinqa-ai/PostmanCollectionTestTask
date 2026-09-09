@@ -1,0 +1,4 @@
+$kind: collection
+name: 08. /ping (GET) - Health Check
+description: Тест-кейсы для проверки доступности сервиса
+order: 8000

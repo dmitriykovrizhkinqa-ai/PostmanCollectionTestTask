@@ -1,0 +1,32 @@
+$kind: http-request
+name: Аутентификация с некорректным Content-Type
+url: "{{baseUrl}}/auth"
+method: POST
+headers:
+  Content-Type: text/plain
+body:
+  type: json
+  content: |-
+    {
+        "username": {{adminUsername}},
+        "password": {{adminPassword}}
+    }
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Статус ответа: 415 Unsupported Media Type\", function () {\r
+
+      \    pm.expect(pm.response.code).to.equal(415);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Токен не должен быть создан\", function () {\r
+
+      \    const response = pm.response.text();\r
+
+      \    pm.expect(response).to.not.include('token');\r
+
+      });"
+    language: text/javascript
+order: 9000

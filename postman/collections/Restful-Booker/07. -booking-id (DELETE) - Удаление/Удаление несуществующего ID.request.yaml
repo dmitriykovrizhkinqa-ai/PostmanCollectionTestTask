@@ -1,0 +1,66 @@
+$kind: http-request
+url: "{{baseUrl}}/booking/99999123"
+method: DELETE
+headers:
+  Cookie: token={{token}}
+body:
+  type: text
+  content: ""
+scripts:
+  - type: beforeRequest
+    code: "const requestDetails = {\r
+
+      \    url: pm.environment.get(\"baseUrl\") + \"/auth\",\r
+
+      \    method: \"POST\",                             \r
+
+      \    header: {\r
+
+      \        \"Content-Type\": \"application/json\"      \r
+
+      \    },\r
+
+      \    body: {\r
+
+      \        mode: \"raw\",\r
+
+      \        raw: JSON.stringify({                     \r
+
+      \            \"username\": \"admin\",\r
+
+      \            \"password\": \"password123\"\r
+
+      \        })\r
+
+      \    }\r
+
+      };\r
+
+      \r
+
+      pm.sendRequest(requestDetails, function (err, response) {\r
+
+      \    var responseData = response.json();\r
+
+      \    pm.environment.set(\"token\", responseData.token);\r
+
+      });\r\n"
+    language: text/javascript
+  - type: afterResponse
+    code: "pm.test(\"Статус ответа: 404 Not Found\", function () {\r
+
+      \    pm.expect(pm.response.code).to.equal(404);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Присутствует сообщение об ошибке\", function () {\r
+
+      \    const response = pm.response.text();\r
+
+      \    pm.expect(response).to.include('Not Found');\r
+
+      });"
+    language: text/javascript
+order: 3000

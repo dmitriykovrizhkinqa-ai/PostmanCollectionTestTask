@@ -1,0 +1,4 @@
+$kind: collection
+name: 02. /booking (POST) - Создание бронирования
+description: Тест-кейсы для создания бронирований
+order: 2000

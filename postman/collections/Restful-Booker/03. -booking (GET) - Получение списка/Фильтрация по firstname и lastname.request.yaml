@@ -1,0 +1,39 @@
+$kind: http-request
+url: "{{baseUrl}}/booking?firstname=John&lastname=Smith"
+method: GET
+queryParams:
+  firstname: John
+  lastname: Smith
+scripts:
+  - type: afterResponse
+    code: "const response = pm.response.json();\r
+
+      \r
+
+      pm.test(\"Статус ответа: 200 OK\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Ответ является массивом\", function () {\r
+
+      \    pm.expect(response).to.be.an('array');\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Каждый элемент содержит bookingid\", function () {\r
+
+      \    response.forEach(item => {\r
+
+      \        pm.expect(item).to.have.property('bookingid');\r
+
+      \    });\r
+
+      });"
+    language: text/javascript
+order: 2000

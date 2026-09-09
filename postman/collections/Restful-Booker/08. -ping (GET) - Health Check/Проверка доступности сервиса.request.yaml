@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/ping"
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Статус ответа: 201 Created\", function () {\r
+
+      \    pm.expect(pm.response.code).to.equal(201);\r
+
+      });"
+    language: text/javascript
+order: 1000

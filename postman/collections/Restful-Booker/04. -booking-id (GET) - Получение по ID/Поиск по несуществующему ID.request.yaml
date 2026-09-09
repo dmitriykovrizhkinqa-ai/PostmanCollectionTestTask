@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/booking/9999999"
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Статус ответа: 404 Not Found\", function () {\r
+
+      \    pm.expect(pm.response.code).to.equal(404);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Присутствует сообщение об ошибке\", function () {\r
+
+      \    const response = pm.response.text();\r
+
+      \    pm.expect(response).to.include('Not Found');\r
+
+      });"
+    language: text/javascript
+order: 2000
